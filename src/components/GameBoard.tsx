@@ -3,7 +3,7 @@
 // ============================================================
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import type { Board, GameState } from "../types";
+import type { Board, GameAction, GameState } from "../types";
 import { BOARD_COLS, BOARD_ROWS } from "../constants";
 import { boardWithPiece } from "../game/Board";
 import LineClearParticles from "./LineClearParticles";
@@ -11,6 +11,7 @@ import LineClearParticles from "./LineClearParticles";
 interface Props {
   state: GameState;
   cellSize?: number;
+  dispatch?: (action: GameAction) => void;
 }
 
 const GAP = 1; // px
@@ -23,7 +24,7 @@ const CLEAR_WORDS = [
   { text: "BLOCKFALL!", color: "#f59e0b" },
 ] as const;
 
-const GameBoard: React.FC<Props> = ({ state, cellSize: cellSizeProp }) => {
+const GameBoard: React.FC<Props> = ({ state, cellSize: cellSizeProp, dispatch }) => {
   const cs = cellSizeProp ?? 30;
   const { board, currentPiece, ghostY, animatingLines, clearedRowsSnapshot, isGameOver } = state;
 
@@ -174,17 +175,30 @@ const GameBoard: React.FC<Props> = ({ state, cellSize: cellSizeProp }) => {
           <div
             className="game-over-overlay"
             style={{
-              position: "absolute", inset: 0,
-              display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center",
-              background: "rgba(14,17,23,0.88)",
+              position:       "absolute",
+              inset:          0,
+              display:        "flex",
+              flexDirection:  "column",
+              alignItems:     "center",
+              justifyContent: "center",
+              background:     "rgba(14,17,23,0.88)",
               backdropFilter: "blur(6px)",
             }}
           >
             <div className="game-over-text">GAME OVER</div>
-            <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, marginTop: 10, letterSpacing: 2 }}>
-              PRESS R TO RESTART
-            </div>
+            {dispatch ? (
+              <button
+                className="restart-btn"
+                onTouchStart={(e) => { e.preventDefault(); dispatch("RESTART"); }}
+                onClick={() => dispatch("RESTART")}
+              >
+                RESTART
+              </button>
+            ) : (
+              <div style={{ color: "rgba(255,255,255,0.22)", fontSize: 11, marginTop: 8, letterSpacing: 1.5 }}>
+                PRESS R TO RESTART
+              </div>
+            )}
           </div>
         )}
 
@@ -192,9 +206,12 @@ const GameBoard: React.FC<Props> = ({ state, cellSize: cellSizeProp }) => {
         {state.isPaused && !isGameOver && (
           <div
             style={{
-              position: "absolute", inset: 0,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              background: "rgba(0,0,0,0.6)",
+              position:       "absolute",
+              inset:          0,
+              display:        "flex",
+              alignItems:     "center",
+              justifyContent: "center",
+              background:     "rgba(0,0,0,0.6)",
               backdropFilter: "blur(3px)",
             }}
           >

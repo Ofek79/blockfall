@@ -121,6 +121,27 @@ body::before {
   text-transform: uppercase;
 }
 
+/* ---- Restart button (game-over overlay) ---- */
+.restart-btn {
+  margin-top: 14px;
+  padding: 10px 24px;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  border-radius: 8px;
+  color: #f87171;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background 0.15s;
+}
+.restart-btn:active {
+  background: rgba(248, 113, 113, 0.28);
+}
+
 /* ---- Scrollbar ---- */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #0e1117; }

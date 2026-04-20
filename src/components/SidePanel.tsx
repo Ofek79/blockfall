@@ -1,5 +1,5 @@
 // ============================================================
-// SidePanel.tsx — exports LeftPanel and RightPanel
+// SidePanel.tsx — exports LeftPanel, RightPanel, MobileTopBar
 // ============================================================
 
 import React, { useEffect, useRef, useState } from "react";
@@ -33,6 +33,50 @@ const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label
 
 const Divider = () => (
   <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "2px 0" }} />
+);
+
+// ---- Mobile top bar: score / level / lines ---------------------------
+
+export const MobileTopBar: React.FC<Props> = ({ state }) => {
+  const { score, lines, level } = state;
+  return (
+    <div style={{
+      display:        "flex",
+      justifyContent: "space-around",
+      alignItems:     "center",
+      padding:        "0 16px",
+      height:         48,
+      flexShrink:     0,
+      background:     "rgba(0,0,0,0.5)",
+      borderBottom:   "1px solid rgba(0,255,255,0.08)",
+    }}>
+      <MobileStat label="SCORE" value={score.toLocaleString()} accent={false} />
+      <MobileStat label="LEVEL" value={String(level)} accent />
+      <MobileStat label="LINES" value={String(lines)} accent={false} />
+    </div>
+  );
+};
+
+const MobileStat: React.FC<{ label: string; value: string; accent: boolean }> = ({ label, value, accent }) => (
+  <div style={{ textAlign: "center" }}>
+    <div style={{
+      fontSize:      8,
+      letterSpacing: 2,
+      color:         "rgba(255,255,255,0.35)",
+      fontWeight:    700,
+      textTransform: "uppercase",
+    }}>
+      {label}
+    </div>
+    <div style={{
+      fontSize:   18,
+      fontWeight: 700,
+      color:      accent ? ACCENT : "#fff",
+      lineHeight: 1.1,
+    }}>
+      {value}
+    </div>
+  </div>
 );
 
 // ---- Left panel: score + hold ----------------------------------------
@@ -143,12 +187,12 @@ export const RightPanel: React.FC<Props> = ({ state }) => {
 
 const StatRow: React.FC<{ label: string; value: number }> = ({ label, value }) => (
   <div style={{
-    display: "flex",
+    display:        "flex",
     justifyContent: "space-between",
-    alignItems: "baseline",
-    fontSize: 13,
-    color: "rgba(255,255,255,0.7)",
-    marginBottom: 2,
+    alignItems:     "baseline",
+    fontSize:       13,
+    color:          "rgba(255,255,255,0.7)",
+    marginBottom:   2,
   }}>
     <span>{label}</span>
     <span style={{ fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>{value}</span>
@@ -158,14 +202,14 @@ const StatRow: React.FC<{ label: string; value: number }> = ({ label, value }) =
 const ControlRow: React.FC<{ keys: string; action: string }> = ({ keys, action }) => (
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 4 }}>
     <span style={{
-      background: "rgba(0,255,255,0.08)",
-      color: ACCENT,
-      fontWeight: 600,
-      fontSize: 10,
-      padding: "2px 5px",
-      borderRadius: 4,
-      border: "1px solid rgba(0,255,255,0.25)",
-      whiteSpace: "nowrap",
+      background:    "rgba(0,255,255,0.08)",
+      color:         ACCENT,
+      fontWeight:    600,
+      fontSize:      10,
+      padding:       "2px 5px",
+      borderRadius:  4,
+      border:        "1px solid rgba(0,255,255,0.25)",
+      whiteSpace:    "nowrap",
       letterSpacing: 0.3,
     }}>
       {keys}
@@ -176,6 +220,6 @@ const ControlRow: React.FC<{ keys: string; action: string }> = ({ keys, action }
   </div>
 );
 
-// Default export for backward-compat (not used after Game.tsx refactor)
+// Default export for backward-compat
 const SidePanel: React.FC<Props> = ({ state }) => <LeftPanel state={state} />;
 export default SidePanel;
